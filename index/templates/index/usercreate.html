@@ -1,0 +1,20 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- error z pliku views.py usercreate -->
+<h2>{{ error }}</h2>
+{% if user.is_authenticated %}
+  <div class="log">
+    <p class="detail-edit-header">Dodaj ogłoszenie</p>
+    <form enctype="multipart/form-data" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Zatwierdź</button>
+    </form>
+  </div>
+ {% else %}
+ Nie jesteś zalogowany
+ {% endif %}
+{% endblock %}

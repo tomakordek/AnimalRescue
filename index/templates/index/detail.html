@@ -1,0 +1,65 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="detail-container">
+  <div class="card-body-detail">
+
+  {% if ToDo.Kategoria == 'ZNALEZIONO' %}
+
+    <h5 class="card-title">ZNALEZIONO</h5>
+    {% elif ToDo.Kategoria == 'SZUKAM' %}
+    <h5 class="card-title">POSZUKUJĘ</h5>
+    {% elif ToDo.Kategoria == 'INNE' %}
+    <h5 class="card-title">INNE</h5>
+    {% else %}
+    <h5 class="card-title-done">ZAKOŃCZONE</h5>
+    {% endif %}
+</div>
+  <p class="detail-title">{{ ToDo.Tytuł }}</p>
+  <p class="detail-info">
+    | Użytkownik: {{ ToDo.user}}
+    | Data ogłoszenia: {{ ToDo.created }}
+    | Miasto: {{ ToDo.Miasto }}
+    {% if ToDo.Lokalizacja|length > 0 %}
+    | Lokalizacja: {{ ToDo.Lokalizacja }}
+    {% else %}
+    {% endif %}
+    {% if ToDo.Kontakt|length > 0 %}
+    | Kontakt: {{ ToDo.Kontakt }}
+    {% else %}
+    {% endif %}
+  </p>
+  <div id="detail-container-center">
+    <div>
+      {% if ToDo.Zdjęcie.url is not Null %}
+      <a href="{{ ToDo.Zdjęcie.url }}"><img src="{{ ToDo.Zdjęcie.url }}"></a>
+      {% else %}
+      Brak zdjęcia
+      {% endif %}
+    </div>
+    <div>
+      <p class="detail-description">{{ ToDo.Opis|linebreaks }}</p>
+    </div>
+  </div>
+</div>
+{{ error }}
+
+{% ifequal ToDo.user|stringformat:"s" request.user.username %}
+
+<div class="detail-edit">
+<p class="detail-edit-header">Panel edycji</p>
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p}}
+  <button type="submit" class="btn btn-success">Zmień</button>
+</form>
+
+<form method="POST" action="{% url 'deletetodo' ToDo.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Usuń</button>
+</form>
+{% else %}
+{% endifequal %}
+</div>
+{% endblock %}

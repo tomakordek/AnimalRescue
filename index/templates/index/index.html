@@ -1,0 +1,101 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+<header>
+<div id="topthree">
+
+    {% for ToDo in ToDos %}
+    {% if ToDo.Akceptacja == 'TAK' %}
+      <div class="card">
+        <div class="card-body">
+            <div>
+              {% if ToDo.Zdjęcie.url is not Null %}
+              <a href="{{ ToDo.Zdjęcie.url }}"><img src="{{ ToDo.Zdjęcie.url }}"></a>
+              {% else %}
+              Brak zdjęcia
+              {% endif %}
+            </div>
+            <div>
+              <h5 class="card-title">{{ ToDo.Tytuł }}</h5>
+              <p class="card-text">{{ ToDo.Opis|truncatechars:100 }}</p>
+            </div>
+          </div>
+        <div class="card-info">
+          <i style=font-size:10px;>Autor: {{ ToDo.user}} || Data: {{ ToDo.created }}</i>
+          <a href="{% url 'detail' ToDo.id %}"><button type="button" class="btn btn-outline-primary" >WIĘCEJ</button></a>
+        </div>
+      </div>
+      {% else %}
+      {% endif %}
+
+
+    {% endfor %}
+
+
+</div>
+</header>
+
+<main>
+<div id="container">
+
+  <div id="container-left">
+    <img src="/static/img/about.png" style=width:300px;>
+  </div>
+  <div id="container-center">
+        <div class="caption v-middle text-center">
+          				<p class="cd-headline clip">
+          			       <span class="blc">AnimalRescue | </span>
+          			       <span class="cd-words-wrapper">
+          			            <b class="is-visible">Wyszukaj</b>
+                            <b>Odnajdź</b>
+          			            <b>Napisz</b>
+          			      </span>
+          	      </p>
+          </div>
+        Wyszukiwarka zaginionych zwierząt z całej Polski. Posiadamy w swojej bazie wiele ogłoszeń o zwierzętach, a także propozycji domów tymczasowych.
+        W menu górnym możesz znaleźć listę ogłoszeń aktualnie znajdujących się na stronie, możliwość zalogowania się i dodanie nowych ogłoszeń, a także dostęp do swojego panelu.
+        Po środkowej części występują trzy najnowsze ogłoszenia które zostały zaakceptowane przez administracje, możesz do nich wejść poprzez kliknięcie w przycisk "WIĘCEJ", aby uzyskać bardziej szczegółowy opis.
+        Strona prawa to twój panel oraz statystyki ze strony, pokazuje ile ogłoszeń jest obecnie na stronie oraz po zalogowaniu ile ogłoszeń jest na twoim koncie.
+        W swoim profilu możesz podejrzeć status twoich ogłoszeń: oczekujący, zaakceptowany, lub niezaakceptowany. Ogłoszenia możesz dowolnie edytować lub usuwać.
+        Pamietaj, żeby ogłoszenie zawierało jak najwięcej informacji żeby zwiększyć szansę na powodzenie.
+    </div>
+  <div id="container-right">
+    {% if user.is_authenticated %}
+      <div>
+        <center><i class="fa fa-user"></i> Użytkownik: <b>{{ user.username }}</b>
+        <br/>
+        <a href="{% url 'UserTodo' %}"><button type="button" class="btn btn-outline-primary">MÓJ PROFIL</button></a>
+        </center>
+        <hr>
+        Twoje ogłoszenia: {{ usercount.count }}<br/>
+        <ul>
+          <li class="li-others">Inne: {{ usercountothers.count }}</li>
+          <li class="li-search">Szukasz: {{ usercountsearch.count }}</li>
+          <li class="li-found">Znalezione: {{ usercountfound.count }}</li>
+          <li class="li-end">Zakończone: {{ usercountend.count }}</li>
+        </ul>
+        <hr>
+      </div>
+    {% elif user.is_anonymous %}
+    <div>
+      <center><i class="fa fa-user"></i> Użytkownik: <b>Zaloguj się</b></center>
+      <hr>
+        Zaloguj się, aby pojawiły się tu twój panel.
+      <hr>
+    </div>
+    {% endif %}
+
+    <div>Ogłoszenia: {{ pagecount.count }}
+      <ul>
+        <li class="li-others">Inne: {{ pagecountothers.count }}</li>
+        <li class="li-search">Szukasz: {{ pagecountsearch.count }}</li>
+        <li class="li-found">Znalezione: {{ pagecountfound.count }}</li>
+        <li class="li-end">Zakończone: {{ pagecountend.count }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+<div class="topcurr">
+  <div>
+    Kategoria:
+    <select select class="form-select" aria-label="Default select example" onchange="location = this.value;">
+     <option>---------</option>
+     <option value="{% url 'currents' %}">Wszystkie</option>
+     <option value="{% url 'currentsfound' %}">Znalezione</option>
+     <option value="{% url 'currentslost' %}">Poszukiwane</option>
+     <option value="{% url 'currentsother' %}">Inne</option>
+     <option value="{% url 'currentsdone' %}">Zakończone</option>
+    </select>
+    </div>
+    <div>Miasto:
+    <form class="d-flex" action= "{% url 'currents' %}">
+            <input class="form-control me-2" type="search" placeholder="Wpisz miasto" aria-label="Search" name="search">
+            <button class="btn btn-outline-primary" type="submit">Szukaj</button>
+    </form>
+    </div>
+</div>
+
+{% for ToDo in TODOS %}
+<center>
+<div class="card-currents mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if ToDo.Zdjęcie.url is not Null %}
+      <a href="{{ ToDo.Zdjęcie.url }}"><img src="{{ ToDo.Zdjęcie.url }}"></a>
+      {% else %}
+      Brak zdjęcia
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      {% if ToDo.Kategoria == 'ZNALEZIONO' %}
+      <div class="card-body-currents">
+        <h5 class="card-title">ZNALEZIONO</h5>
+        {% elif ToDo.Kategoria == 'SZUKAM' %}
+        <div class="card-body-currents">
+        <h5 class="card-title">POSZUKUJĘ</h5>
+        {% elif ToDo.Kategoria == 'INNE' %}
+        <div class="card-body-currents">
+        <h5 class="card-title">INNE</h5>
+        {% else %}
+        <div class="card-body-currents-done">
+        <h5 class="card-title-done">ZAKOŃCZONE</h5>
+        {% endif %}
+        <p class="card-text">{{ ToDo.Opis|truncatechars:250 }}</p>
+        <div class="card-info">
+          <i>Autor: {{ ToDo.user}} || Data: {{ ToDo.created }}</i>
+
+          <a href="{% url 'detail' ToDo.id %}">
+            {% ifequal ToDo.user|stringformat:"s" request.user.username %}
+              <button type="button" class="btn btn-outline-primary">WIĘCEJ+EDYCJA</button>
+            {% else %}
+              <button type="button" class="btn btn-outline-primary">WIĘCEJ</button>
+            {% endifequal %}
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</center>
+
+{% endfor %}
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    {% if TODOS.has_previous %}
+      <li class="page-item enable">
+        <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true"> << </a>
+      </li>
+      <li class="page-item enable">
+        <a class="page-link" href="?page={{ TODOS.previous_page_number }}" tabindex="-1" aria-disabled="true"> < </a>
+      </li>
+      {% endif %}
+      {% for num in TODOS.paginator.page_range %}
+        {% if TODOS.number == num %}
+          <li class="page-item" ><a class="page-link" style="background-color:rgb(87, 157, 222); color:white;"  href="?page={{num}}"><b> {{ num }} </b></a></li>
+        {% elif num > TODOS.number|add:'-3' and num < TODOS.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{num}}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if TODOS.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ TODOS.next_page_number }}">></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ TODOS.paginator.num_pages }}">>></a>
+        </li>
+      {% endif %}
+  </ul>
+</nav>
+
+
+{% endblock %}

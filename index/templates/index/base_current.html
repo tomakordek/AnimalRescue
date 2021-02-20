@@ -1,0 +1,175 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <title>Animal Rescue</title>
+  </head>
+<body>
+<section id="top">
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'index' %}">Animal Rescue</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'currents' %}"><i class="fa fa-newspaper-o"></i> Ogłoszenia</a>
+            </li>
+
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'createtodo' %}" tabindex="-1" aria-disabled="true"><i class="fa fa-plus-circle"></i> Dodaj</a>
+              </li>
+              <li class="nav-item">
+              <i class="nav-link"><i class="fa fa-user"></i> {{ user.username }}</i>
+              </li>
+              <form action="{% url 'logoutuser' %}" method="POST">
+              {% csrf_token %}
+              <li class="nav-item">
+              <button type="submit" class="btn btn-danger">Wyloguj</button>
+              </li>
+              </form>
+
+            {% else %}
+              <li class="nav-item">
+              <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" alt="Zaloguj sie"><i class="fa fa-plus-circle"></i> Dodaj</a>
+              </li>
+              <li>
+              <a class="nav-link" href="{%  url 'loginuser' %}">Zaloguj</a>
+              </li>
+              <li class="nav-item">
+              <a class="nav-link" href="{% url 'signupuser' %}">Zarejestruj</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+    </div>
+  </nav>
+
+<div id="logo">
+</div>
+</section>
+<div class="topcurr">
+  <div>
+    Kategoria:
+    <select select class="form-select" aria-label="Default select example" onchange="location = this.value;">
+     <option>---------</option>
+     <option value="{% url 'currents' %}">Wszystkie</option>
+     <option value="{% url 'currentsfound' %}">Znalezione</option>
+     <option value="{% url 'currentslost' %}">Poszukiwane</option>
+     <option value="{% url 'currentsother' %}">Inne</option>
+     <option value="{% url 'currentsdone' %}">Zakończone</option>
+    </select>
+    </div>
+    <div>Miasto:
+    <form class="d-flex" action= "{% url 'currents' %}">
+            <input class="form-control me-2" type="search" placeholder="Wpisz miasto" aria-label="Search" name="search">
+            <button class="btn btn-outline-primary" type="submit">Szukaj</button>
+    </form>
+    </div>
+</div>
+{% for ToDo in TODOS %}
+<center>
+<div class="card-currents mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% if ToDo.Zdjęcie.url is not Null %}
+      <a href="{{ ToDo.Zdjęcie.url }}"><img src="{{ ToDo.Zdjęcie.url }}"></a>
+      {% else %}
+      Brak zdjęcia
+      {% endif %}
+    </div>
+    <div class="col-md-8">
+      {% if ToDo.Kategoria == 'ZNALEZIONO' %}
+      <div class="card-body-currents">
+        <h5 class="card-title">ZNALEZIONO</h5>
+        {% elif ToDo.Kategoria == 'SZUKAM' %}
+        <div class="card-body-currents">
+        <h5 class="card-title">POSZUKUJĘ</h5>
+        {% elif ToDo.Kategoria == 'INNE' %}
+        <div class="card-body-currents">
+        <h5 class="card-title">INNE</h5>
+        {% else %}
+        <div class="card-body-currents-done">
+        <h5 class="card-title-done">ZAKOŃCZONE</h5>
+        {% endif %}
+        <p class="card-text">{{ ToDo.Opis|truncatechars:250 }}</p>
+        <div class="card-info">
+          <i>Autor: {{ ToDo.user}} || Data: {{ ToDo.created }}</i>
+
+          <a href="{% url 'detail' ToDo.id %}">
+            {% ifequal ToDo.user|stringformat:"s" request.user.username %}
+              <button type="button" class="btn btn-outline-primary">WIĘCEJ+EDYCJA</button>
+            {% else %}
+              <button type="button" class="btn btn-outline-primary">WIĘCEJ</button>
+            {% endifequal %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</center>
+{% endfor %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    {% if TODOS.has_previous %}
+      <li class="page-item enable">
+        <a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true"> << </a>
+      </li>
+      <li class="page-item enable">
+        <a class="page-link" href="?page={{ TODOS.previous_page_number }}" tabindex="-1" aria-disabled="true"> < </a>
+      </li>
+      {% endif %}
+      {% for num in TODOS.paginator.page_range %}
+        {% if TODOS.number == num %}
+          <li class="page-item" ><a class="page-link" style="background-color:rgb(87, 157, 222); color:white;"  href="?page={{num}}"><b> {{ num }} </b></a></li>
+        {% elif num > TODOS.number|add:'-3' and num < TODOS.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{num}}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if TODOS.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ TODOS.next_page_number }}">></a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ TODOS.paginator.num_pages }}">>></a>
+        </li>
+      {% endif %}
+  </ul>
+</nav>
+
+
+<footer>
+  <div>Wykonanie: Tomasz Kordek<br/>
+  86-300 Grudziądz</div>
+  <div>AnimalRescue to strona która posiada w swojej bazie danych mnóstwo ogłoszeń o zwierzętach.
+    Strona poświęcona zagubionym lub znalezionym zwierzętom.
+    Pomagamy bezdomnym zwierzętom, aby powróciły do swojego domu.</div>
+</footer>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
+</body>
+</html>

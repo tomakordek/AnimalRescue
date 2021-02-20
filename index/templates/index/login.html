@@ -1,0 +1,16 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+  <h2>{{ error }}</h2>
+  <center>
+  <div class="login">
+    <h1>Login</h1>
+    <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Login</button>
+    </form>
+  </div>
+  </center>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<!-- error z pliku views.py signupuser -->
+<h2>{{ error }}</h2>
+<center>
+<div class="reg">
+  <h1>Zarejestruj się</h1>
+  <form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Zarejestruj</button>
+  </form>
+</div>
+</center>
+{% endblock %}

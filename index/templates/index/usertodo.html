@@ -1,0 +1,81 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% block content %}
+<center>Status twoich ogłoszeń:</center>
+{% if user.is_authenticated %}
+  <div class="usertodo-current">
+    <i class="fa fa-user"></i><b>{{ user.username }}</b>
+    <hr>
+    Twoje ogłoszenia: {{ usercount.count }}<br/>
+    <ul>
+      <li class="li-others">Inne: {{ usercountothers.count }}</li>
+      <li class="li-search">Szukasz: {{ usercountsearch.count }}</li>
+      <li class="li-found">Znalezione: {{ usercountfound.count }}</li>
+      <li class="li-end">Zakończone: {{ usercountend.count }}</li>
+    </ul>
+    <hr>
+  </div>
+  {% for ToDo in TODOS %}
+  {% ifequal ToDo.user|stringformat:"s" request.user.username %}
+  <center>
+  <div class="card-currents mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% if ToDo.Zdjęcie.url is not Null %}
+        <a href="{{ ToDo.Zdjęcie.url }}"><img src="{{ ToDo.Zdjęcie.url }}"></a>
+        {% else %}
+        Brak zdjęcia
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        {% if ToDo.Kategoria == 'ZNALEZIONO' %}
+        <div class="card-body-currents">
+          <h5 class="card-title">ZNALEZIONO</h5>
+          {% elif ToDo.Kategoria == 'SZUKAM' %}
+          <div class="card-body-currents">
+          <h5 class="card-title">POSZUKUJĘ</h5>
+          {% elif ToDo.Kategoria == 'INNE' %}
+          <div class="card-body-currents">
+          <h5 class="card-title">INNE</h5>
+          {% else %}
+          <div class="card-body-currents-done">
+          <h5 class="card-title-done">ZAKOŃCZONE</h5>
+          {% endif %}
+          <p class="card-text">{{ ToDo.Opis|truncatechars:250 }}</p>
+          <div class="card-info">
+            <i>Autor: {{ ToDo.user}} || Data: {{ ToDo.created }}</i>
+            <i> || Status:
+            {% if ToDo.Akceptacja == 'TAK' %}
+            <i style="color:green;"><b>AKCEPTACJA</b></i>
+            {% elif ToDo.Akceptacja == 'NIE' %}
+            <i style="color:red"><b>ODRZUCONY</b></i>
+            {% else %}
+            <i style="color:yellow"><b>OCZEKUJE</b></i></i>
+            {% endif %}
+            <a href="{% url 'detail' ToDo.id %}">
+                <button type="button" class="btn btn-outline-primary">WIĘCEJ+EDYCJA</button>
+            </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+  </div>
+  </center>
+  {% endifequal %}
+  {% endfor %}
+{% else %}
+<div>
+  <center><i class="fa fa-user"></i> Użytkownik: <b>Zaloguj się</b></center>
+  <hr>
+    Zaloguj się, aby pojawiły się tu twój panel.
+  <hr>
+</div>
+{% endif %}
+
+
+
+{% endblock %}
