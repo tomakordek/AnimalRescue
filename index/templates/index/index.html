@@ -36,7 +36,10 @@
 </header>
 
 <main>
-  <div class="not-logged-user"><i class="fa fa-info-circle"></i> Zaloguj się lub zarejestruj żeby mieć dostęp do profilu użytkownika, dodawania ogłoszeń oraz edycji.</div>
+  {% if user.is_authenticated %}
+  {% else %}
+    <div class="not-logged-user"><i class="fa fa-info-circle"></i>Zaloguj się lub zarejestruj żeby mieć dostęp do profilu użytkownika, dodawania ogłoszeń oraz edycji.</div>
+  {% endif %}
 <div id="container">
 
   <div id="container-left">
@@ -81,7 +84,7 @@
     <div>
       <center><i class="fa fa-user"></i> Użytkownik: <b>Zaloguj się</b></center>
       <hr>
-        Zaloguj się, aby pojawiły się tu twój panel.
+        Zaloguj się, aby pojawiły się tu twój panel oraz mieć możliwość dodawania i edytowania swoich ogłoszeń.
       <hr>
     </div>
     {% endif %}

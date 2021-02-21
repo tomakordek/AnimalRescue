@@ -143,7 +143,7 @@ border-left: 1px solid rgba(83, 82, 83, 0.3);
 .card-info i
 {
 
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .card-info .btn
@@ -185,7 +185,7 @@ width: 700px;
 #container-right
 {
   width: 250px;
-  height: 500px;
+  height: 400px;
   background-color: white;
   border-top: 5px solid rgb(87, 157, 222);
   box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.20);
@@ -488,20 +488,25 @@ input
 }
 .not-logged-user
 {
-  width: 50%;
+  width: 40%;
   min-height:30px;
   background-color: white;
   border-top: 5px solid rgb(87, 157, 222);
   box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.20);
   display: flex;
-  justify-content: center;
   align-items: center;
   text-align: center;
+  justify-content: center;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
   margin: 0 auto;
   padding: 10px;
   margin-top: 40px;
+}
+.not-logged-user i
+{
+  font-size: 30px;
+  margin-right: 5px;
 }
 
 @media only screen and (max-width: 1112px)
@@ -660,4 +665,21 @@ footer div:nth-of-type(1)
   padding: 10px;
   display: flex;
   align-items: center;
+}
+.not-logged-user
+{
+  width: 85%;
+  min-height:30px;
+  justify-content: center;
+  flex-direction: column;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  margin: 0 auto;
+  padding: 10px;
+  margin-top: 40px;
+}
+.not-logged-user i
+{
+  font-size: 70px;
+  margin: 0 auto;
 }

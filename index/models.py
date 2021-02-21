@@ -27,4 +27,4 @@ class ToDo(models.Model):
     Kontakt = models.CharField(max_length=30, blank=True, help_text='<b>* Pole niewymagane</b><br>Numer kontaktowy, mail itp.')
     Akceptacja = models.CharField(max_length=15, choices=ACCEPT_CHOICES, blank=True)
     def __str__(self):
-        return self.user.username
+        return '%s %s %s' % (self.user.username, "Akceptacja:", self.Akceptacja)

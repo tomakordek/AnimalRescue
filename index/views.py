@@ -33,6 +33,9 @@ def main(request):
     return render(request,'index/index.html', {'ToDos':ToDos,'pagecount':pagecount, 'pagecountfound':pagecountfound, 'pagecountsearch':pagecountsearch,
     'pagecountend':pagecountend, 'pagecountothers':pagecountothers})
 
+#panel administracyjny
+def adminsite(request):
+    return render(request,'index/admin/')
 #REJESTRACJA UZYTKOWNIKA
 def signupuser(request):
     if request.method == 'GET':
@@ -60,7 +63,7 @@ def currents(request):
     if search_query:
         TODOS = ToDo.objects.filter(Miasto__icontains=search_query)
     else:
-        TODOS = ToDo.objects.all()
+        TODOS = ToDo.objects.all().order_by('-created')
     paginator = Paginator(TODOS, 3)
     page = request.GET.get('page')
     TODOS = paginator.get_page(page)

@@ -46,12 +46,13 @@
             <i>Autor: {{ ToDo.user}} || Data: {{ ToDo.created }}</i>
             <i> || Status:
             {% if ToDo.Akceptacja == 'TAK' %}
-            <i style="color:green;"><b>AKCEPTACJA</b></i>
+              <i style="color:green;"><b>AKCEPTACJA</b></i>
             {% elif ToDo.Akceptacja == 'NIE' %}
-            <i style="color:red"><b>ODRZUCONY</b></i>
+              <i style="color:red"><b>ODRZUCONY</b></i>
             {% else %}
-            <i style="color:yellow"><b>OCZEKUJE</b></i></i>
+              <i style="color:rgb(122, 95, 0)"><b>OCZEKUJE</b></i>
             {% endif %}
+            </i>
             <a href="{% url 'detail' ToDo.id %}">
                 <button type="button" class="btn btn-outline-primary">WIĘCEJ+EDYCJA</button>
             </a>
