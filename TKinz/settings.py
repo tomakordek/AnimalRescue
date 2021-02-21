@@ -124,7 +124,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-try:
-    from .local_settings import *
-except ImportError:
-    print("Brak pliku local. Musisz go stworzyc!")
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     print("Brak pliku local. Musisz go stworzyc!")
